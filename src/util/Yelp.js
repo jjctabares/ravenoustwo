@@ -16,7 +16,7 @@ const Yelp = {
           return response.json();
         }
         throw new Error('Request failed!');
-      }, networkError => console.log(networkError.message)).then(jsonResponse => accessToken = jsonResponse.access_token);
+      }, networkError => console.log(networkError.message)).then(jsonResponse => accessToken = jsonResponse.access_token)
     );
   },
 
@@ -25,8 +25,10 @@ const Yelp = {
      Yelp.getAccessToken().then(()=>{
        return(
          fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${term}&location=${location}&sort_by=${sortBy}`, {
-           headers: `Bearer ${accessToken}`
+           headers:{
+           Authorization: `Bearer ${accessToken}`
            //body: JSON.stringify({id: '200'})
+           }
          }).then(response => {
            if (response.ok) {
              return response.json();
@@ -35,7 +37,7 @@ const Yelp = {
          }, networkError => console.log(networkError.message)).then(jsonResponse => {
            if(jsonResponse.businesses){
              return jsonResponse.businesses.map(business=> {
-               return
+               return(
                {
                  id: business.id,
                  imageSrc: business.image_url,
@@ -47,10 +49,10 @@ const Yelp = {
                  category: business.categories.title,
                  rating: business.rating,
                  reviewCount: business.review_count
-               }
-             })
+               })
+             });
            }
-         });
+         })
        )
      })
    )
